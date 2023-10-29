@@ -32,3 +32,29 @@
   border-radius: 5px;
   
 }
+
+.waveForm {
+  display: flex;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 16px;
+  max-width: 600px;
+  margin-top: 16px;
+  text-align: center;
+}
+
+.inputMessage {
+ margin-left: 10px;
+ padding: 2px 8px;
+ width: 400px;
+ height: 24px;
+ border-radius: 4px;
+ border: 1px solid goldenrod;
+ outline: none;
+ font-size: 16px;
+}
+.message {
+  background-color: OldLace;
+  margin-top: 16px;
+  padding: 8px;
+}
