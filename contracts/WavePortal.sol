@@ -18,7 +18,7 @@ contract WavePortal {
 
     Wave[] waves;
 
-    constructor() {
+    constructor() payable {
         console.log("Hello Ethereum!.");
     }
 
@@ -29,6 +29,15 @@ contract WavePortal {
         waves.push(Wave(msg.sender, _message, block.timestamp));
 
         emit NewWave(msg.sender, block.timestamp, _message);
+
+        uint256 prizeamount = 0.0001 ether;
+
+        require(prizeamount <= address(this).balance, "Low Balance! Recharge");
+
+        (bool success, ) = (msg.sender).call{value: prizeamount}("");
+
+        require(success, "Falied to withdraw money from contract.");
+   
     }
 
     function getAllWaves() public view returns(Wave[] memory) {

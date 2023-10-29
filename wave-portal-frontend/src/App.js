@@ -45,7 +45,7 @@ function App() {
   const [allWaves, setAllWaves] = useState([]);
   const [message, setMessage] = useState("");
 
-  const contractAddress = "0xbD2297Cd2371C95A136372bc556011B8687faf87";
+  const contractAddress = "0x233DE41F12Bc8Aa67Bd7a97405B5CB4c4A1a352A";
   const contractABI = abi.abi;
 
   const messageHandler = (e) => {
