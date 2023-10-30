@@ -45,7 +45,7 @@ function App() {
   const [allWaves, setAllWaves] = useState([]);
   const [message, setMessage] = useState("");
 
-  const contractAddress = "0xa04fc7b93b9304801879138384e93FEDc2ea55eb";
+  const contractAddress = "0x5b4f911B639968911cBd51b8749740860E21eB26";
   const contractABI = abi.abi;
 
   const messageHandler = (e) => {
@@ -92,6 +92,41 @@ function App() {
       console.log("ERROR", error);
     }
   };
+
+  useEffect(() => {
+    let wavePortalContract;
+
+    const onNewWave = (from, timestamp, message) => {
+      console.log("NewWave", from, timestamp, message);
+
+      setAllWaves((prevState) => [
+        ...prevState,
+        {
+          address: from,
+          timestamp: new Date(Number(wave.timestamp) * 1000),
+          message: message,
+        },
+      ]);
+    };
+
+    if (window.ethereum) {
+      const provider = new ethers.BrowserProvider(window.ethereum);
+
+      wavePortalContract = new ethers.Contract(
+        contractAddress,
+        contractABI,
+        provider
+      );
+
+      wavePortalContract.on("NewWave", onNewWave);
+    }
+
+    return () => {
+      if (wavePortalContract) {
+        wavePortalContract.off("NewWave", onNewWave);
+      }
+    };
+  }, []);
 
   const connectWallet = async () => {
     console.log("CLICKED");
@@ -152,9 +187,12 @@ function App() {
         // console.log("DEPLOYED", await wavePortalContract.getDeployedCode());
         let count = await wavePortalContractStatic.getTotalWaves();
         console.log("Total waves", count.toString());
+
         setWaves(count.toString());
 
-        const waveTxn = await wavePortalContractDynamic.wave(message);
+        const waveTxn = await wavePortalContractDynamic.wave(message, {
+          gasLimit: 300000,
+        });
         console.log("Mining...", waveTxn.hash);
 
         await waveTxn.wait();
@@ -186,8 +224,14 @@ function App() {
         </div>
 
         <form className="waveForm" onSubmit={wave}>
-          <label >Message : 
-          <input className="inputMessage" onChange={messageHandler} name="message" type="text"></input>
+          <label>
+            Message :
+            <input
+              className="inputMessage"
+              onChange={messageHandler}
+              name="message"
+              type="text"
+            ></input>
           </label>
           <button type="submit" className="waveButton">
             Wave at Me
@@ -204,10 +248,7 @@ function App() {
 
         {allWaves?.map((wave, index) => {
           return (
-            <div
-              key={index}
-              className="message"
-            >
+            <div key={index} className="message">
               <div>Address: {wave.address}</div>
               <div>Time: {wave.timestamp.toString()}</div>
               <div>Message: {wave.message}</div>
