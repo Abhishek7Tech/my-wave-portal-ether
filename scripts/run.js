@@ -20,6 +20,9 @@ const main = async () => {
     const waveTxn = await waveContract.wave("Holy Moly!");
     await waveTxn.wait();
 
+    // const waveTxnAgain = await waveContract.wave("Holy Moly!");
+    // await waveTxnAgain.wait();
+
     await waveContract.getTotalWaves();
 
     const waveTxn2 = await waveContract.connect(randomPerson).wave("BOLY MOLY!");
