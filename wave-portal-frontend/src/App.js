@@ -103,7 +103,7 @@ function App() {
         ...prevState,
         {
           address: from,
-          timestamp: new Date(Number(wave.timestamp) * 1000),
+          timestamp: new Date(Number(timestamp) * 1000),
           message: message,
         },
       ]);
@@ -126,7 +126,7 @@ function App() {
         wavePortalContract.off("NewWave", onNewWave);
       }
     };
-  }, []);
+  }, [allWaves]);
 
   const connectWallet = async () => {
     console.log("CLICKED");
